@@ -1,4 +1,5 @@
 use hex;
+use std::fmt;
 
 use keys::error as KeyError;
 
@@ -8,6 +9,7 @@ pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Clone, Debug)]
 pub enum Error {
+    CustomError(String),
     BytesReadError(ReadError),
     BytesWriteError(WriteError),
     FromHexError(hex::FromHexError),
@@ -17,4 +19,3 @@ pub enum Error {
     ParseSymbolError(ParseSymbolError),
     FromTrxKindsError,
 }
-
