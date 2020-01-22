@@ -24,6 +24,58 @@ use crate::{
 };
 
 pub type AuthSequences = Vec<AuthSequence>;
+pub type ActionReceipts = Vec<ActionReceipt>;
+
+#[cfg_attr(feature = "std", derive(Deserialize))]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[eosio_core_root_path = "crate"]
+pub struct ActionReceipt {
+    pub name: AccountName,
+    pub act_digest: Checksum256,
+    pub global_sequence: u64,
+    pub recv_sequence: u64,
+    pub auth_sequence: AuthSequences,
+    pub code_sequence: usize,
+    pub abi_sequence: usize,
+}
+
+impl SerializeData for ActionReceipt {}
+
+impl ActionReceipt {
+    pub fn new(
+        name: &str,
+        act_digest_string: &str,
+        recv_sequence: u64,
+        abi_sequence: usize,
+        global_sequence: u64,
+        code_sequence: usize,
+        auth_sequences: AuthSequences,
+    ) -> crate::Result<Self> {
+        Ok(
+            ActionReceipt {
+                abi_sequence,
+                code_sequence,
+                recv_sequence,
+                global_sequence,
+                auth_sequence: auth_sequences,
+                act_digest: convert_hex_string_to_checksum256(
+                    act_digest_string
+                )?,
+                name: AccountName::from_str(name.as_ref())
+                        .map_err(crate::Error::from)?,
+            }
+        )
+    }
+
+    pub fn serialize(&self) -> Vec<u8> {
+        self.to_serialize_data()
+    }
+
+    pub fn to_digest(&self) -> Vec<u8> {
+        sha256::Hash::hash(&self.serialize()).to_vec()
+    }
+}
+
 
 #[cfg_attr(feature = "std", derive(Deserialize))]
 #[derive(Clone, Debug, Read, Write, NumBytes, Default)]
