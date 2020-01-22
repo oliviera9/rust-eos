@@ -8,6 +8,21 @@ use core::str::FromStr;
 use serde::{Serialize, Deserialize};
 #[cfg(feature = "std")]
 use serde::ser::{Serializer, SerializeStruct};
+use bitcoin_hashes::{ sha256, Hash };
+
+use crate::{
+    Read,
+    Write,
+    Asset,
+    NumBytes,
+    ActionName,
+    AccountName,
+    Checksum256,
+    SerializeData,
+    PermissionLevel,
+    utils::convert_hex_string_to_checksum256,
+};
+
 
 use crate::{AccountName, ActionName, Asset, NumBytes, PermissionLevel, Read, SerializeData, Write};
 
