@@ -23,8 +23,26 @@ use crate::{
     utils::convert_hex_string_to_checksum256,
 };
 
+pub type AuthSequences = Vec<AuthSequence>;
 
-use crate::{AccountName, ActionName, Asset, NumBytes, PermissionLevel, Read, SerializeData, Write};
+#[cfg_attr(feature = "std", derive(Deserialize))]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[eosio_core_root_path = "crate"]
+pub struct AuthSequence(AccountName, u64);
+
+impl SerializeData for AuthSequence {}
+
+impl AuthSequence {
+    pub fn new(name: &str, number: u64) -> crate::Result<Self> {
+        Ok(
+            AuthSequence(
+                AccountName::from_str(name.as_ref())
+                    .map_err(crate::Error::from)?,
+                number,
+            )
+        )
+    }
+}
 
 /// This is the packed representation of an action along with meta-data about
 /// the authorization levels.
