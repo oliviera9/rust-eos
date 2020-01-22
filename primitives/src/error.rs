@@ -1,21 +1,18 @@
 use hex;
-use std::fmt;
-
 use keys::error as KeyError;
-
 use crate::{ParseAssetError, ParseNameError, ParseSymbolError, ReadError, WriteError};
 
 pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Clone, Debug)]
 pub enum Error {
+    FromTrxKindsError,
     CustomError(String),
+    Keys(KeyError::Error),
     BytesReadError(ReadError),
     BytesWriteError(WriteError),
-    FromHexError(hex::FromHexError),
-    Keys(KeyError::Error),
-    ParseAssetErr(ParseAssetError),
     ParseNameErr(ParseNameError),
+    FromHexError(hex::FromHexError),
+    ParseAssetErr(ParseAssetError),
     ParseSymbolError(ParseSymbolError),
-    FromTrxKindsError,
 }
