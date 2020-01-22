@@ -3,6 +3,8 @@ use crate::{AccountName, NumBytes, PermissionName, Read, Write};
 use core::str::FromStr;
 use serde::{Deserialize, Serialize};
 
+pub type PermissionLevels = Vec<PermissionLevel>;
+
 /// A permission
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Default, Read, Write, NumBytes, Hash, PartialOrd, Ord, Deserialize, Serialize)]
 #[eosio_core_root_path = "crate"]
