@@ -27,7 +27,7 @@ pub type AuthSequences = Vec<AuthSequence>;
 pub type ActionReceipts = Vec<ActionReceipt>;
 
 #[cfg_attr(feature = "std", derive(Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[derive(Clone, Debug, Serialize, Read, Write, NumBytes, Default)]
 #[eosio_core_root_path = "crate"]
 pub struct ActionReceipt {
     pub name: AccountName,
@@ -78,7 +78,7 @@ impl ActionReceipt {
 
 
 #[cfg_attr(feature = "std", derive(Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[derive(Clone, Debug, Serialize, Read, Write, NumBytes, Default)]
 #[eosio_core_root_path = "crate"]
 pub struct AuthSequence(AccountName, u64);
 
