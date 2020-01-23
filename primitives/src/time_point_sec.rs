@@ -10,7 +10,7 @@ use crate::{NumBytes, Read, TimePoint, Write};
 #[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
 #[derive(Read, Write, NumBytes, PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Copy, Hash, Default)]
 #[eosio_core_root_path = "crate"]
-pub struct TimePointSec(u32);
+pub struct TimePointSec(pub u32);
 
 impl TimePointSec {
     #[inline]
@@ -34,6 +34,10 @@ impl TimePointSec {
     pub fn add_seconds(&mut self, t: u32) -> Self {
         self.0 += t;
         *self
+    }
+
+    pub fn seconds_from_now(num_seconds: u32) -> Self {
+        Self::from_unix_seconds(((Utc::now().timestamp() as u32) + num_seconds) as u32)
     }
 }
 
