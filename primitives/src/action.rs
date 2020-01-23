@@ -30,7 +30,7 @@ pub type ActionReceipts = Vec<ActionReceipt>;
 #[derive(Clone, Debug, Serialize, Read, Write, NumBytes, Default)]
 #[eosio_core_root_path = "crate"]
 pub struct ActionReceipt {
-    pub name: AccountName,
+    pub recipient: AccountName,
     pub act_digest: Checksum256,
     pub global_sequence: u64,
     pub recv_sequence: u64,
@@ -43,7 +43,7 @@ impl SerializeData for ActionReceipt {}
 
 impl ActionReceipt {
     pub fn new(
-        name: &str,
+        recipient: &str,
         act_digest_string: &str,
         recv_sequence: u64,
         abi_sequence: usize,
@@ -61,7 +61,7 @@ impl ActionReceipt {
                 act_digest: convert_hex_string_to_checksum256(
                     act_digest_string
                 )?,
-                name: AccountName::from_str(name.as_ref())
+                recipient: AccountName::from_str(recipient.as_ref())
                         .map_err(crate::Error::from)?,
             }
         )
@@ -85,10 +85,10 @@ pub struct AuthSequence(AccountName, u64);
 impl SerializeData for AuthSequence {}
 
 impl AuthSequence {
-    pub fn new(name: &str, number: u64) -> crate::Result<Self> {
+    pub fn new(recipient: &str, number: u64) -> crate::Result<Self> {
         Ok(
             AuthSequence(
-                AccountName::from_str(name.as_ref())
+                AccountName::from_str(recipient.as_ref())
                     .map_err(crate::Error::from)?,
                 number,
             )
