@@ -113,8 +113,21 @@ pub struct Action {
 }
 
 impl Action {
-    pub fn new(account: AccountName, name: ActionName, authorization: Vec<PermissionLevel>, data: Vec<u8>) -> Self {
+    pub fn new(
+        account: AccountName,
+        name: ActionName,
+        authorization: Vec<PermissionLevel>,
+        data: Vec<u8>
+    ) -> Self {
         Action { account, name, authorization, data }
+    }
+
+    pub fn serialize(&self) -> Vec<u8> {
+        self.to_serialize_data()
+    }
+
+    pub fn to_digest(&self) -> Vec<u8> {
+        sha256::Hash::hash(&self.serialize()).to_vec()
     }
 
     pub fn from_str<T: AsRef<str>, S: SerializeData>(
