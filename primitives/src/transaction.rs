@@ -294,7 +294,7 @@ impl Transaction {
         }
     }
 
-    pub fn get_signing_data(&self, chain_id: String) -> crate::Result<Vec<u8>> {
+    pub fn get_signing_data(&self, chain_id: &str) -> crate::Result<Vec<u8>> {
         let mut sign_data: Vec<u8>  = Vec::new();
         let mut chain_id_hex = hex::decode(chain_id)
             .map_err(crate::error::Error::FromHexError)?;
