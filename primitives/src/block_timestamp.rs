@@ -9,7 +9,7 @@ use serde::ser::{Serialize, Serializer};
 /// and an interval in milliseconds and computes the number of slots.
 #[derive(Read, Write, NumBytes, PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Copy, Hash, Default)]
 #[eosio_core_root_path = "crate"]
-pub struct BlockTimestamp(u32);
+pub struct BlockTimestamp(pub u32);
 
 #[cfg(feature = "std")]
 impl Serialize for BlockTimestamp {
