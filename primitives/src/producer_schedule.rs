@@ -15,3 +15,12 @@ pub struct ProducerSchedule {
     /// List of producers for this schedule, including its signing key
     pub producers: Vec<ProducerKey>,
 }
+
+impl ProducerSchedule {
+    pub fn new(
+        version: u32,
+        producers: Vec<ProducerKey>,
+    ) -> Self {
+        ProducerSchedule { version, producers }
+    }
+}
