@@ -85,6 +85,12 @@ impl BlockHeader {
         Checksum256::hash(self.clone())
     }
 
+    pub fn serialize(&self) -> crate::Result<Vec<u8>> {
+        let mut data = vec![0u8; self.num_bytes()];
+        self.write(&mut data, &mut 0).map_err(crate::Error::BytesWriteError)?;
+        Ok(data)
+    }
+
     pub fn id(&self) -> crate::Result<Checksum256> {
         let mut result = self.digest()?;
         let mut hash0 = result.hash0();
