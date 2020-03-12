@@ -123,7 +123,7 @@ impl AuthSequence {
 /// This is the packed representation of an action along with meta-data about
 /// the authorization levels.
 #[cfg_attr(feature = "std", derive(Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default, PartialEq, Eq)]
 #[eosio_core_root_path = "crate"]
 pub struct Action {
     /// Name of the account the action is intended for

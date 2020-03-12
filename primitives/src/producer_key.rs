@@ -4,7 +4,7 @@ use crate::{AccountName, NumBytes, PublicKey, Read, Write};
 use serde::{Deserialize, Serialize};
 
 /// Maps producer with its signing key, used for producer schedule
-#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq)]
+#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
 #[eosio_core_root_path = "crate"]
 pub struct ProducerKey {

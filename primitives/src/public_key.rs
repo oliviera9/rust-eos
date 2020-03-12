@@ -111,6 +111,8 @@ impl PartialEq for PublicKey {
     }
 }
 
+impl Eq for PublicKey {}
+
 impl std::fmt::Debug for PublicKey {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         std::fmt::Debug::fmt(&self.type_, f)?;

@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 /// Defines both the order, account name, and signing keys of the active set
 /// of producers.
-#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq)]
+#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
 #[eosio_core_root_path = "crate"]
 pub struct ProducerSchedule {

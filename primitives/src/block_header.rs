@@ -13,7 +13,7 @@ use crate::{
 #[cfg(feature = "std")]
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Default, Read, Write, NumBytes, PartialEq)]
+#[derive(Debug, Clone, Default, Read, Write, NumBytes, PartialEq, Eq)]
 #[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
 #[eosio_core_root_path = "crate"]
 pub struct BlockHeader {
