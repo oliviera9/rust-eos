@@ -217,6 +217,31 @@ impl serde::ser::Serialize for Action {
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug, Read, Write, NumBytes, Default)]
 #[eosio_core_root_path = "crate"]
+pub struct ActionPTokenMint {
+    pub to: AccountName,
+    pub quantity: Asset,
+    pub memo: String,
+}
+
+impl ActionPTokenMint {
+    pub fn new(to: AccountName, quantity: Asset, memo: String) -> Self {
+        ActionPTokenMint { to, quantity, memo }
+    }
+
+    pub fn from_str<T: AsRef<str>>(to: T, quantity: T, memo: T) -> crate::Result<Self> {
+        let to = AccountName::from_str(to.as_ref()).map_err(crate::Error::from)?;
+        let quantity = Asset::from_str(quantity.as_ref()).map_err(crate::Error::from)?;
+        let memo = memo.as_ref().to_string();
+
+        Ok(ActionPTokenMint { to, quantity, memo })
+    }
+}
+
+impl SerializeData for ActionPTokenMint {}
+
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[eosio_core_root_path = "crate"]
 pub struct ActionTransfer {
     pub from: AccountName,
     pub to: AccountName,
