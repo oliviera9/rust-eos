@@ -1,6 +1,6 @@
 //! <https://github.com/EOSIO/eosio.cdt/blob/796ff8bee9a0fc864f665a0a4d018e0ff18ac383/libraries/eosiolib/contracts/eosio/producer_schedule.hpp#L54-L69>
 use alloc::vec::Vec;
-use crate::{AccountName, NumBytes, ProducerKey, Read, Write, PublicKey, Checksum256, UnsignedInt};
+use crate::{AccountName, NumBytes, ProducerKey, ProducerKeyV2, Read, Write, PublicKey, Checksum256, UnsignedInt};
 use core::default::Default;
 #[cfg(feature = "std")]
 use serde::{Deserialize, Serialize};
@@ -17,6 +17,39 @@ pub struct ProducerSchedule {
     pub version: u32,
     /// List of producers for this schedule, including its signing key
     pub producers: Vec<ProducerKey>,
+}
+
+#[derive(Read, Write, NumBytes, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+//#[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
+#[eosio_core_root_path = "crate"]
+#[repr(C)]
+pub struct ProducerScheduleV2 {
+    pub version: u32,
+    pub producers: Vec<ProducerKeyV2>,
+}
+
+impl ProducerScheduleV2 {
+    pub fn new(version: u32, producers: Vec<ProducerKeyV2>) -> Self {
+        Self {
+            version,
+            producers
+        }
+    }
+
+    /*
+    pub fn get_producer_key(&self, p: AccountName) -> PublicKey {
+        for i in self.producers.iter() {
+            if i.producer_name == p {
+                return i.block_signing_key.clone();
+            }
+        }
+        Default::default()
+    }
+    */
+
+    pub fn schedule_hash(&self) -> crate::Result<Checksum256> {
+        Checksum256::hash(self.clone())
+    }
 }
 
 impl ProducerSchedule {
@@ -58,6 +91,15 @@ impl Default for ProducerSchedule {
         ProducerSchedule {
             version,
             producers: alloc::vec![producers]
+        }
+    }
+}
+
+impl Default for ProducerScheduleV2 {
+    fn default() -> Self {
+        ProducerScheduleV2 {
+            version: 0,
+            producers: vec![],
         }
     }
 }
