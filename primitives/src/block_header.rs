@@ -5,7 +5,7 @@ use crate::{
     Checksum256,
     Extension,
     NumBytes,
-    ProducerSchedule,
+    ProducerScheduleV2,
     Read,
     Signature,
     Write,
@@ -24,7 +24,7 @@ pub struct BlockHeader {
     pub transaction_mroot: Checksum256,
     pub action_mroot: Checksum256,
     pub schedule_version: u32,
-    pub new_producers: Option<ProducerSchedule>,
+    pub new_producers: Option<ProducerScheduleV2>,
     pub header_extensions: Vec<Extension>,
 }
 
@@ -65,7 +65,7 @@ impl BlockHeader {
         transaction_mroot: Checksum256,
         action_mroot: Checksum256,
         schedule_version: u32,
-        new_producers: Option<ProducerSchedule>,
+        new_producers: Option<ProducerScheduleV2>,
         header_extensions: Vec<Extension>,
     ) -> Self {
         Self {
