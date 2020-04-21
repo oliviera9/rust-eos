@@ -10,7 +10,35 @@ use serde::{Deserialize, Serialize};
 pub struct ProducerKey {
     /// Name of the producer
     pub producer_name: AccountName,
+
     /// Block signing key used by this producer
     #[cfg_attr(feature = "std", serde(deserialize_with = "super::string_to_public_key"))]
     pub block_signing_key: PublicKey,
+}
+
+#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[eosio_core_root_path = "crate"]
+#[repr(C)]
+pub struct ProducerKeyV2 {
+    pub producer_name: AccountName,
+    pub authority: Authority,
+}
+
+pub type Authority = (u8, KeysAndThreshold);
+
+#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[eosio_core_root_path = "crate"]
+#[repr(C)]
+pub struct KeysAndThreshold {
+    pub threshold: u32,
+    pub keys: Vec<Key>,
+}
+
+#[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[eosio_core_root_path = "crate"]
+#[repr(C)]
+pub struct Key {
+    #[cfg_attr(feature = "std", serde(deserialize_with = "super::string_to_public_key"))]
+    pub key: PublicKey,
+    pub weight: u16,
 }
