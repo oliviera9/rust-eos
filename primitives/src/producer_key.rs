@@ -16,6 +16,15 @@ pub struct ProducerKey {
     pub block_signing_key: PublicKey,
 }
 
+impl ProducerKey {
+    pub fn new(
+        producer_name: AccountName,
+        block_signing_key: PublicKey
+    ) -> Self {
+        ProducerKey { producer_name, block_signing_key }
+    }
+}
+
 #[derive(Read, Write, NumBytes, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[eosio_core_root_path = "crate"]
 #[repr(C)]
