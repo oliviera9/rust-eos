@@ -25,7 +25,7 @@ pub struct BlockHeader { // FIXME/TODO Make generic over the producer schedule!
     pub transaction_mroot: Checksum256,
     pub action_mroot: Checksum256,
     pub schedule_version: u32,
-    pub new_producers: Option<ProducerScheduleV2>,
+    pub new_producer_schedule: Option<ProducerScheduleV2>,
     pub header_extensions: Vec<Extension>,
 }
 
@@ -51,7 +51,7 @@ impl core::fmt::Display for BlockHeader {
             self.transaction_mroot,
             self.action_mroot,
             self.schedule_version,
-            self.new_producers,
+            self.new_producer_schedule,
             self.header_extensions,
         )
     }
@@ -66,7 +66,7 @@ impl BlockHeader {
         transaction_mroot: Checksum256,
         action_mroot: Checksum256,
         schedule_version: u32,
-        new_producers: Option<ProducerScheduleV2>,
+        new_producer_schedule: Option<ProducerScheduleV2>,
         header_extensions: Vec<Extension>,
     ) -> Self {
         Self {
@@ -77,7 +77,7 @@ impl BlockHeader {
             transaction_mroot,
             action_mroot,
             schedule_version,
-            new_producers,
+            new_producer_schedule,
             header_extensions,
         }
     }
