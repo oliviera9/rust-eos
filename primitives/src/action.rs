@@ -1,4 +1,5 @@
 //! <https://github.com/EOSIO/eosio.cdt/blob/4985359a30da1f883418b7133593f835927b8046/libraries/eosiolib/contracts/eosio/action.hpp#L249-L274>
+use derive_more::Constructor;
 use alloc::string::{String, ToString};
 use alloc::vec;
 use alloc::vec::Vec;
@@ -238,6 +239,26 @@ impl ActionPTokenMint {
 }
 
 impl SerializeData for ActionPTokenMint {}
+
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default, Constructor)]
+#[eosio_core_root_path = "crate"]
+pub struct ProvableMetadata {
+    pub version: u8,
+    pub user_data: Vec<u8>,
+    pub originating_tx_id: Vec<u8>,
+    pub originating_sender: String,
+    pub originating_deposit_address: String,
+    pub originating_timestamp: u32,
+}
+
+impl ProvableMetadata {
+    pub fn serialize(&self) -> Vec<u8> {
+        self.to_serialize_data()
+    }
+}
+
+impl SerializeData for ProvableMetadata {}
 
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug, Read, Write, NumBytes, Default)]
