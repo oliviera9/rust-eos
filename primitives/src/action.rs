@@ -1,4 +1,5 @@
 //! <https://github.com/EOSIO/eosio.cdt/blob/4985359a30da1f883418b7133593f835927b8046/libraries/eosiolib/contracts/eosio/action.hpp#L249-L274>
+#![allow(non_snake_case)]
 use derive_more::Constructor;
 use alloc::string::{String, ToString};
 use alloc::vec;
@@ -239,6 +240,27 @@ impl ActionPTokenMint {
 }
 
 impl SerializeData for ActionPTokenMint {}
+
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
+#[eosio_core_root_path = "crate"]
+pub struct ActionPTokenPegOut {
+    pub tokenContract: AccountName,
+    pub quantity: Asset,
+    pub recipient: AccountName,
+    pub metadata: Vec<u8>,
+}
+
+impl ActionPTokenPegOut {
+    pub fn from_str<T: AsRef<str>>(token_contract: T, quantity: T, recipient: T, metadata: &[u8]) -> crate::Result<Self> {
+        let token_contract = AccountName::from_str(token_contract.as_ref()).map_err(crate::Error::from)?;
+        let quantity = Asset::from_str(quantity.as_ref()).map_err(crate::Error::from)?;
+        let recipient = AccountName::from_str(recipient.as_ref()).map_err(crate::Error::from)?;
+        Ok(Self { tokenContract: token_contract, quantity, recipient, metadata: metadata.to_vec() })
+    }
+}
+
+impl SerializeData for ActionPTokenPegOut {}
 
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug, Read, Write, NumBytes, Default, Constructor)]
