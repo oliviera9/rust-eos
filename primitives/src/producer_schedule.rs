@@ -36,17 +36,6 @@ impl ProducerScheduleV2 {
         }
     }
 
-    /*
-    pub fn get_producer_key(&self, p: AccountName) -> PublicKey {
-        for i in self.producers.iter() {
-            if i.producer_name == p {
-                return i.block_signing_key.clone();
-            }
-        }
-        Default::default()
-    }
-    */
-
     pub fn schedule_hash(&self) -> crate::Result<Checksum256> {
         Checksum256::hash(self.clone())
     }

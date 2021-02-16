@@ -1,6 +1,5 @@
 //! <https://github.com/EOSIO/eosio.cdt/blob/4985359a30da1f883418b7133593f835927b8046/libraries/eosiolib/contracts/eosio/action.hpp#L249-L274>
 #![allow(non_snake_case)]
-use derive_more::Constructor;
 use alloc::string::{String, ToString};
 use alloc::vec;
 use alloc::vec::Vec;
@@ -10,7 +9,6 @@ use core::str::FromStr;
 use serde::{Serialize, Deserialize};
 #[cfg(feature = "std")]
 use serde::ser::{Serializer, SerializeStruct};
-use bitcoin_hashes::{ sha256, Hash };
 
 use crate::{
     Read,
@@ -19,108 +17,9 @@ use crate::{
     NumBytes,
     ActionName,
     AccountName,
-    Checksum256,
     SerializeData,
     PermissionLevel,
-    utils::convert_hex_string_to_checksum256,
 };
-
-pub type AuthSequences = Vec<AuthSequence>;
-pub type ActionReceipts = Vec<ActionReceipt>;
-
-#[cfg_attr(feature = "std", derive(Deserialize))]
-#[derive(
-    Clone,
-    Debug,
-    Serialize,
-    Read,
-    Write,
-    NumBytes,
-    Default,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-)]
-#[eosio_core_root_path = "crate"]
-pub struct ActionReceipt {
-    pub recipient: AccountName,
-    pub act_digest: Checksum256,
-    pub global_sequence: u64,
-    pub recv_sequence: u64,
-    pub auth_sequence: AuthSequences,
-    pub code_sequence: usize,
-    pub abi_sequence: usize,
-}
-
-impl SerializeData for ActionReceipt {}
-
-impl ActionReceipt {
-    pub fn new(
-        recipient: &str,
-        act_digest_string: &str,
-        recv_sequence: u64,
-        abi_sequence: usize,
-        global_sequence: u64,
-        code_sequence: usize,
-        auth_sequences: AuthSequences,
-    ) -> crate::Result<Self> {
-        Ok(
-            ActionReceipt {
-                abi_sequence,
-                code_sequence,
-                recv_sequence,
-                global_sequence,
-                auth_sequence: auth_sequences,
-                act_digest: convert_hex_string_to_checksum256(
-                    act_digest_string
-                )?,
-                recipient: AccountName::from_str(recipient.as_ref())
-                        .map_err(crate::Error::from)?,
-            }
-        )
-    }
-
-    pub fn serialize(&self) -> Vec<u8> {
-        self.to_serialize_data()
-    }
-
-    pub fn to_digest(&self) -> Vec<u8> {
-        sha256::Hash::hash(&self.serialize()).to_vec()
-    }
-}
-
-
-#[cfg_attr(feature = "std", derive(Deserialize))]
-#[derive(
-    Clone,
-    Debug,
-    Serialize,
-    Read,
-    Write,
-    NumBytes,
-    Default,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-)]
-#[eosio_core_root_path = "crate"]
-pub struct AuthSequence(AccountName, u64);
-
-impl SerializeData for AuthSequence {}
-
-impl AuthSequence {
-    pub fn new(recipient: &str, number: u64) -> crate::Result<Self> {
-        Ok(
-            AuthSequence(
-                AccountName::from_str(recipient.as_ref())
-                    .map_err(crate::Error::from)?,
-                number,
-            )
-        )
-    }
-}
 
 /// This is the packed representation of an action along with meta-data about
 /// the authorization levels.
@@ -139,23 +38,6 @@ pub struct Action {
 }
 
 impl Action {
-    pub fn new(
-        account: AccountName,
-        name: ActionName,
-        authorization: Vec<PermissionLevel>,
-        data: Vec<u8>
-    ) -> Self {
-        Action { account, name, authorization, data }
-    }
-
-    pub fn serialize(&self) -> Vec<u8> {
-        self.to_serialize_data()
-    }
-
-    pub fn to_digest(&self) -> Vec<u8> {
-        sha256::Hash::hash(&self.serialize()).to_vec()
-    }
-
     pub fn from_str<T: AsRef<str>, S: SerializeData>(
         account: T,
         name: T,
@@ -215,72 +97,6 @@ impl serde::ser::Serialize for Action {
         state.end()
     }
 }
-
-#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
-#[eosio_core_root_path = "crate"]
-pub struct ActionPTokenMint {
-    pub to: AccountName,
-    pub quantity: Asset,
-    pub memo: String,
-}
-
-impl ActionPTokenMint {
-    pub fn new(to: AccountName, quantity: Asset, memo: String) -> Self {
-        ActionPTokenMint { to, quantity, memo }
-    }
-
-    pub fn from_str<T: AsRef<str>>(to: T, quantity: T, memo: T) -> crate::Result<Self> {
-        let to = AccountName::from_str(to.as_ref()).map_err(crate::Error::from)?;
-        let quantity = Asset::from_str(quantity.as_ref()).map_err(crate::Error::from)?;
-        let memo = memo.as_ref().to_string();
-
-        Ok(ActionPTokenMint { to, quantity, memo })
-    }
-}
-
-impl SerializeData for ActionPTokenMint {}
-
-#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default)]
-#[eosio_core_root_path = "crate"]
-pub struct ActionPTokenPegOut {
-    pub tokenContract: AccountName,
-    pub quantity: Asset,
-    pub recipient: AccountName,
-    pub metadata: Vec<u8>,
-}
-
-impl ActionPTokenPegOut {
-    pub fn from_str<T: AsRef<str>>(token_contract: T, quantity: T, recipient: T, metadata: &[u8]) -> crate::Result<Self> {
-        let token_contract = AccountName::from_str(token_contract.as_ref()).map_err(crate::Error::from)?;
-        let quantity = Asset::from_str(quantity.as_ref()).map_err(crate::Error::from)?;
-        let recipient = AccountName::from_str(recipient.as_ref()).map_err(crate::Error::from)?;
-        Ok(Self { tokenContract: token_contract, quantity, recipient, metadata: metadata.to_vec() })
-    }
-}
-
-impl SerializeData for ActionPTokenPegOut {}
-
-#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
-#[derive(Clone, Debug, Read, Write, NumBytes, Default, Constructor)]
-#[eosio_core_root_path = "crate"]
-pub struct ProvableMetadata {
-    pub version: u8,
-    pub user_data: Vec<u8>,
-    pub originating_tx_id: Vec<u8>,
-    pub originating_sender: String,
-    pub originating_deposit_address: String,
-    pub originating_timestamp: u32,
-}
-
-impl ProvableMetadata {
-    pub fn serialize(&self) -> Vec<u8> {
-        self.to_serialize_data()
-    }
-}
-
-impl SerializeData for ProvableMetadata {}
 
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug, Read, Write, NumBytes, Default)]

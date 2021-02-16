@@ -362,7 +362,7 @@ mod tests {
         to_string, 1_0000, Symbol::from_str("4,EOS"), "1.0000 EOS"
         to_string_signed, -1_0000, Symbol::from_str("4,EOS"), "-1.0000 EOS"
         to_string_fraction, 1_0001, Symbol::from_str("4,EOS"), "1.0001 EOS"
-        to_string_zero_precision, 10_001, Symbol::from_str("0,EOS"), "10001 EOS"
+        to_string_zero_precision, 10_001, Symbol::from_str("0,EOS"), "10001 EOS" // NOTE: HERE!
         to_string_zero_precision_unsigned, -10_001, Symbol::from_str("0,EOS"), "-10001 EOS"
         to_string_max_number, i64::max_value(), Symbol::from_str("4,EOS"), "922337203685477.5807 EOS"
         to_string_min_number, i64::min_value(), Symbol::from_str("4,EOS"), "-922337203685477.5808 EOS"
