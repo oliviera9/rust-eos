@@ -202,14 +202,14 @@ impl serde::ser::Serialize for Action {
         state.serialize_field("account", &self.account)?;
         state.serialize_field("name", &self.name)?;
         state.serialize_field("authorization", &self.authorization)?;
-        state.serialize_field("hex_data", &hex::encode(&self.data))?;
-        match (self.account.to_string().as_str(), self.name.to_string().as_str()) {
-            ("eosio.token", "transfer") => {
-                let data = ActionTransfer::read(&self.data, &mut 0).expect("Action read from data failed.");
-                state.serialize_field("data", &data)?;
-            },
-            _ => {}
-        }
+        // state.serialize_field("hex_data", &hex::encode(&self.data))?;
+        // match (self.account.to_string().as_str(), self.name.to_string().as_str()) {
+        //     ("eosio.token", "transfer") => {
+        //         let data = ActionTransfer::read(&self.data, &mut 0).expect("Action read from data failed.");
+        //         state.serialize_field("data", &data)?;
+        //     },
+        //     _ => {}
+        // }
         state.end()
     }
 }
